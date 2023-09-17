@@ -15,22 +15,46 @@ using System.Threading.Tasks;
 
 namespace CookieAuthentication
 {
+    public static class Extension {
+        public static void AddAmazonSecretsManager(this IConfigurationBuilder configurationBuilder, 
+    					string region,
+    					string secretName)
+        {
+            var configurationSource = 
+                    new AmazonSecretsManagerConfigurationSource(region, secretName);
+
+            configurationBuilder.Add(configurationSource);
+        }
+    }
     public class Program
 {
     public static void Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
 
-        //set CookieAuthenticationDefaults.AuthenticationScheme as the default authentication scheme
-        builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-        .AddCookie(x => x.LoginPath = "/account/login");
-        builder.Services.AddAuthentication()
-            .AddMicrosoftIdentityWebApp(builder.Configuration.GetSection("AzureAd"), OpenIdConnectDefaults.AuthenticationScheme, "ADCookies");
+        builder.Host.ConfigureAppConfiguration(((_, configurationBuilder) =>
+        {
+            configurationBuilder.AddAmazonSecretsManager("<your region>", "<secret name>");
+        }));
+
+        var settings = new MyApiCredentials();
+        var b = builder.Configuration.GetSection("AzureAd");
+
+        //set CookieAuthenticationDefaults.AuthenticationScheme as the default authentication schemeö
 
         // Add microsoft sign in page
         builder.Services.AddControllersWithViews().AddMicrosoftIdentityUI();
 
+        builder.Services.Configure<MyApiCredentials>(builder.Configuration);
+
+        builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+        .AddCookie(x => x.LoginPath = "/account/login");
+
+        builder.Services.AddAuthentication()
+            .AddMicrosoftIdentityWebApp(builder.Configuration.GetSection("TEST"), OpenIdConnectDefaults.AuthenticationScheme, "ADCookies");
+
         var app = builder.Build();
+        var a = builder.Configuration.GetSection("TEST");
 
         // Configure the HTTP request pipeline.
         if (!app.Environment.IsDevelopment())
