@@ -9,6 +9,17 @@ using System.Threading.Tasks;
 
 namespace WebApp_OpenIDConnect_DotNet_graph
 {
+    public static class Extension {
+        public static void AddAmazonSecretsManager(this IConfigurationBuilder configurationBuilder, 
+    					string region,
+    					string secretName)
+        {
+            var configurationSource = 
+                    new AmazonSecretsManagerConfigurationSource(region, secretName);
+
+            configurationBuilder.Add(configurationSource);
+        }
+    }
     public class Program
     {
         public static void Main(string[] args)
@@ -20,6 +31,10 @@ namespace WebApp_OpenIDConnect_DotNet_graph
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
+                    webBuilder.ConfigureAppConfiguration(((_, configurationBuilder) =>
+                    {
+                        configurationBuilder.AddAmazonSecretsManager("<your region>", "<secret name>");
+                    }));
                     webBuilder.UseStartup<Startup>();
                 });
     }

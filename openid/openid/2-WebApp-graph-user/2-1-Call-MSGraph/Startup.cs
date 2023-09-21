@@ -35,7 +35,7 @@ namespace WebApp_OpenIDConnect_DotNet_graph
             });
 
             services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)
-                .AddMicrosoftIdentityWebApp(Configuration)
+                .AddMicrosoftIdentityWebApp(Configuration.GetSection("TEST"))
                 .EnableTokenAcquisitionToCallDownstreamApi(initialScopes)
                 .AddMicrosoftGraph(Configuration.GetSection("DownstreamApi"))
                 .AddInMemoryTokenCaches();
