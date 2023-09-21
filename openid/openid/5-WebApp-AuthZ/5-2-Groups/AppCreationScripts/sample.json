@@ -1,0 +1,106 @@
+{
+  "Sample": {
+    "Title": "Add authorization using groups & group claims to an ASP.NET Core Web app that signs-in users with the Microsoft identity platform",
+    "Level": 300,
+    "Client": "ASP.NET Core Web App",
+    "Service": "Microsoft Graph",
+    "RepositoryUrl": "microsoft-identity-platform-aspnetcore-webapp-tutorial",
+    "Endpoint": "AAD v2.0",
+    "platform": "AspNetCore",
+    "Languages": [
+      "csharp"
+    ],
+    "Products": [
+      "aspnet-core",
+      "azure-active-directory",
+      "microsoft-identity-web"
+    ],
+    "Library": [
+      "Microsoft.Identity.Web"
+    ],
+    "products": [
+      "azure-active-directory",
+      "ms-graph"
+    ]
+  },
+  /*
+    This section describes the Azure AD Applications to configure, and their dependencies
+  */
+  "AADApps": [
+    {
+      "Id": "webApp",
+      "Name": "WebApp-GroupClaims",
+      "Kind": "WebApp",
+      "Audience": "AzureADMyOrg",
+      "HomePage": "https://localhost:44321/",
+      "ReplyUrls": "https://localhost:44321/, https://localhost:44321/signin-oidc",
+      "LogoutUrl": "https://localhost:44321/signout-oidc",
+      "PasswordCredentials": "Auto",
+      "GroupMembershipClaims": "SecurityGroup",
+      "EnableIdTokenIssuance": true,
+      "RequiredResourcesAccess": [
+        {
+          "Resource": "Microsoft Graph",
+          "DelegatedPermissions": [
+            "User.Read",
+            "GroupMember.Read.All"
+          ]
+        }
+      ],
+      "SecurityGroups": [
+        {
+          "Name": "GroupAdmin",
+          "Description": "Admin Security Group"
+        },
+        {
+          "Name": "GroupMember",
+          "Description": "User Security Group"
+        }
+      ],
+      "ManualSteps": [
+        {
+          "Comment": "Navigate to the API Permissions page and select 'Grant admin consent for (your tenant)'"
+        }
+      ],
+      "SampleSubPath":"5-WebApp-AuthZ\\5-2-Groups",
+      "OptionalClaims": {
+        "IdTokenClaims": [ "acct" ]
+      }
+    }
+  ],
+  /*
+    This section describes how to update the code in configuration files from the apps coordinates, once the apps
+    are created in Azure AD.
+    Each section describes a configuration file, for one of the apps, it's type (XML, JSon, plain text), its location
+    with respect to the root of the sample, and the mappping (which string in the config file is mapped to which value
+  */
+  "CodeConfiguration": [
+    {
+      "App": "webApp",
+      "SettingKind": "JSON",
+      "SettingFile": "\\..\\appsettings.json",
+      "Mappings": [
+        {
+          "key": "ClientId",
+          "value": ".AppId"
+        },
+        {
+          "key": "TenantId",
+          "value": "$tenantId"
+        },
+        {
+          "key": "ClientSecret",
+          "value": ".AppKey"
+        },
+        {
+          "key": "Enter the objectID for GroupAdmin group copied from Azure Portal",
+          "value": "$GroupAdmin.Id"
+        },
+        {
+          "key": "Enter the objectID for GroupMember group copied from Azure Portal",
+          "value": "$GroupMember.Id"
+        }
+      ]
+    }
+  ]
+}
