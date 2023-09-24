@@ -1,6 +1,26 @@
-﻿@{
+﻿@model IEnumerable<KeyPairModel>
+
+@{
     ViewData["Title"] = "Privacy Policy";
 }
 <h1>@ViewData["Title"]</h1>
 
-<p>Use this page to detail your site's privacy policy.</p>
+<div><b>Table Format Data Displaying in ForEach</b><br /></div>  
+<table class="table table-bordered table-responsive table-hover">  
+    <tr>  
+        <th>Key Name </th>  
+        <th>Key Description </th>  
+        <th>Key created </th>  
+        <th>Key expires</th>  
+    </tr>  
+    @foreach (var d in Model)  
+    {  
+        <tr>  
+            <td>@d.KeyName</td>  
+            <td>@d.KeyDescription</td>  
+            <td>@d.Created</td>  
+            <td>@d.Expires</td>  
+            <td> <input type="button" value="Create" onclick="location.href='@Url.Action("DownloadFile", "Home", new { filename = "rsa_key.p8"})'" /></td>
+        </tr>  
+    }  
+</table>  
