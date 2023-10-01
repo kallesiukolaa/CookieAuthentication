@@ -1,7 +1,6 @@
 using Azure;
 using Azure.Identity;
 using Azure.Security.KeyVault.Secrets;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
@@ -45,6 +44,18 @@ namespace WebApp_OpenIDConnect_DotNet_graph
             //string tenantId = Configuration.GetValue<string>("AzureAd:TenantId");
             //services.Configure<MicrosoftIdentityOptions>(
             //   options => { options.ClientSecret = GetSecretFromKeyVault(tenantId, "ENTER_YOUR_SECRET_NAME_HERE"); });
+
+            string[] requiredRoles = new string[] {
+                "MyGroup1",
+                "MyRole2"
+            };
+
+            services.AddAuthorization(
+                options => options.AddPolicy(
+                    "MemberGroupRequired", 
+                    policy => policy.RequireRole(requiredRoles)
+                    )
+                );
 
             services.AddControllersWithViews(options =>
             {
