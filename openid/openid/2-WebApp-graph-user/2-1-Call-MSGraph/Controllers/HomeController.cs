@@ -16,6 +16,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using WebApp_OpenIDConnect_DotNet_graph.Models;
 
@@ -131,30 +132,11 @@ namespace WebApp_OpenIDConnect_DotNet_graph.Controllers
             return RedirectToAction("Privacy");
         }
 
-        private string GenerateHash(int length) 
-        {
-            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-            Random random = new Random();
-            return new string(Enumerable.Repeat(chars, length)
-                .Select(s => s[random.Next(s.Length)]).ToArray());
-        }
-
         [AllowAnonymous]
         [Route("DownloadFile")]
-        public async Task<IActionResult> DownloadFile(string filename)
+        public IActionResult DownloadFile(string filename)
         {
-            string hashFolder = GenerateHash(20);
-            System.IO.Directory.CreateDirectory(Path.Combine(Directory.GetCurrentDirectory(), "processedFiles", hashFolder));
-            System.IO.File.WriteAllText(Path.Combine(Directory.GetCurrentDirectory(), "processedFiles", hashFolder, filename), "dfsdfjfjsisjfsi");
-            string filepath = Path.Combine(Directory.GetCurrentDirectory(), "processedFiles", hashFolder, filename);
-            var provider = new FileExtensionContentTypeProvider();
-            if (!provider.TryGetContentType(filepath, out var contentType)) 
-            {
-                contentType = "application/octet-stream";
-            }
-            var bytes = await System.IO.File.ReadAllBytesAsync(filepath);
-            Directory.Delete(Path.Combine(Directory.GetCurrentDirectory(), "processedFiles", hashFolder), true);
-            return File(bytes, contentType, Path.GetFileName(filepath));
+            return File(Encoding.Unicode.GetBytes("dfsdfjfjsisjfsi"), "application/octet-stream", "rsa_key.p8");
             //return View();
         }
 

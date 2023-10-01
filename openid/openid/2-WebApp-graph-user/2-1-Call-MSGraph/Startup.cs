@@ -54,8 +54,8 @@ namespace WebApp_OpenIDConnect_DotNet_graph
                 options => options.AddPolicy(
                     "MemberGroupRequired", 
                     policy => policy.RequireRole(requiredRoles)
-                    )
-                );
+                )
+            );
 
             services.AddControllersWithViews(options =>
             {
