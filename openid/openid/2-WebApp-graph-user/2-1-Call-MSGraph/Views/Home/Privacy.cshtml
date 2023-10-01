@@ -20,7 +20,12 @@
             <td>@d.KeyDescription</td>  
             <td>@d.Created</td>  
             <td>@d.Expires</td>  
-            <td> <input type="button" value="Create" onclick="location.href='@Url.Action("DownloadFile", "Home", new { filename = "rsa_key.p8"})'" /></td>
+            <td> <input type="button" value="Create" onclick="location.href='@Url.Action("DownloadPrivateKey", "Home")'" /></td>
         </tr>  
     }  
 </table>  
+@using (Html.BeginForm("AddToCart", "Controller", new { id = 0 }, FormMethod.Post))
+{
+  <input type="number" id="itemCount" name="itemCount"/>
+  <button type="submit"><span>Add</span></button>
+}

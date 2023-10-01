@@ -132,12 +132,28 @@ namespace WebApp_OpenIDConnect_DotNet_graph.Controllers
             return RedirectToAction("Privacy");
         }
 
+        private string GeneratePrivateKey()
+        {
+            string strCmdText;
+            strCmdText= "dir";
+            var process = System.Diagnostics.Process.Start("CMD.exe",strCmdText);
+            process.WaitForExit();
+            string output = process.StandardOutput.ReadToEnd();
+            
+            return output;
+        }
+
         [AllowAnonymous]
         [Route("DownloadFile")]
-        public IActionResult DownloadFile(string filename)
+        public IActionResult DownloadPrivateKey()
         {
-            return File(Encoding.Unicode.GetBytes("dfsdfjfjsisjfsi"), "application/octet-stream", "rsa_key.p8");
-            //return View();
+            return DownloadFile(GeneratePrivateKey(), "rsa_key.p8");
+
+        }
+
+        public IActionResult DownloadFile(string fileContent, string filename)
+        {
+            return File(Encoding.Unicode.GetBytes(fileContent), "application/octet-stream", filename);
         }
 
         [AllowAnonymous]
